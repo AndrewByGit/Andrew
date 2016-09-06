@@ -1,6 +1,13 @@
 import optparse
+import nmap
 import socket
 from socket import *
+
+def nmapScan(tgtHost,tgtPort):
+    nmScan =nmap.PortScanner()
+    nmScan.scan(tgtHost,tgtPort)
+    state=nmScan[tgtHost]['tcp'][int(tgtPort)]['state']
+    print " [*] " + tgtHost + " tcp/"+tgtPort +" "+state
 
 def connScan(tgtHost, tgtPort):
     try:
@@ -43,6 +50,8 @@ def main():
     if (tgtHost == None) | (tgtPorts[0] == None):
         print '[-] You must specify a target host and port[s].'
         exit(0)
-    portScan(tgtHost,tgtPorts)
+    for tgtPort in tgtPorts:
+        nmapScan(tgtHost,tgtPort)
+    #portScan(tgtHost,tgtPorts)
 if __name__ == '__main__':
     main()
